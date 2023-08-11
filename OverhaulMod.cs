@@ -4,7 +4,6 @@ using System.Reflection;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
-using TerrariaOverhaul.Core.Networking;
 
 namespace TerrariaOverhaul;
 
@@ -43,6 +42,4 @@ public class OverhaulMod : Mod
 		}*/
 	}
 
-	public override void HandlePacket(BinaryReader reader, int sender)
-		=> MultiplayerSystem.HandlePacket(reader, sender);
 }

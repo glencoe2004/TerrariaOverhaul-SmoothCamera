@@ -8,7 +8,6 @@ using Newtonsoft.Json.Linq;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ModLoader;
-using TerrariaOverhaul.Core.Debugging;
 using TerrariaOverhaul.Utilities;
 
 namespace TerrariaOverhaul.Core.Configuration;
@@ -66,10 +65,7 @@ public sealed partial class ConfigSystem : ModSystem
 			configWatcher.Changed += OnConfigDirectoryFileUpdateChanged;
 		}
 		catch {
-			DebugSystem.Logger.Error($"Could not start a {nameof(FileSystemWatcher)} instance for the configuration file. Automatic config file reloading will be disabled.");
 		}
-
-		Logging.IgnoreExceptionContents(nameof(IOUtils.TryReadAllTextSafely)); // Don't log caught errors from loops in that method.
 
 		// Legacy config handling
 
@@ -101,16 +97,12 @@ public sealed partial class ConfigSystem : ModSystem
 		string? resultMessage = GetLoadingResultMessage(result);
 
 		if (result.HasFlag(LoadingResult.ErrorFlag)) {
-			DebugSystem.Logger.Error(resultMessage);
 
 			if (resetOnError) {
-				DebugSystem.Logger.Info("Resetting configuration...");
 				ResetConfig();
 			}
 		} else if (result.HasFlag(LoadingResult.WarningFlag)) {
-			DebugSystem.Logger.Warn(resultMessage);
 		} else {
-			DebugSystem.Logger.Info(resultMessage);
 		}
 
 		SaveConfig(configInfo.Json);
@@ -125,7 +117,6 @@ public sealed partial class ConfigSystem : ModSystem
 			ignoreConfigWatcherCounter++;
 
 			if (oldJson == null) {
-				IOUtils.TryReadAllTextSafely(ConfigPath, out oldJson);
 			}
 
 			string newJson = SaveConfigInner();
@@ -261,12 +252,6 @@ public sealed partial class ConfigSystem : ModSystem
 			LoadConfig();
 
 			if (!Main.dedServ) {
-				var sound = Common.Magic.MagicWeapon.MagicBlastSound;
-
-				try {
-					SoundEngine.PlaySound(sound with { Volume = 0.33f });
-				}
-				catch { }
 			}
 		}
 	}

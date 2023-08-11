@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Terraria;
-using TerrariaOverhaul.Core.Debugging;
 
 namespace TerrariaOverhaul.Utilities;
 
@@ -16,7 +15,6 @@ public static class MessageUtils
 		}
 
 		if (logAsInfo) {
-			DebugSystem.Logger.Info(text);
 		}
 	}
 }

@@ -5,8 +5,6 @@ using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using TerrariaOverhaul.Core.Debugging;
-using TerrariaOverhaul.Core.Networking;
 using TerrariaOverhaul.Utilities;
 
 #pragma warning disable CA1822 // Mark members as static
@@ -52,10 +50,6 @@ public sealed partial class ConfigSystem : ModSystem
 		if (Main.netMode != NetmodeID.Server) {
 			return;
 		}
-
-		DebugSystem.Logger.Debug($"Sending configuration to {(toClient >= 0 ? $"client {toClient}" : $"all clients{(ignoreClient >= 0 ? $", except {ignoreClient}" : null)}")}.");
-
-		MultiplayerSystem.SendPacket(new ConfigPacket(), toClient: toClient, ignoreClient: ignoreClient);
 	}
 
 	internal static void NetWriteConfiguration(BinaryWriter writer)
@@ -110,7 +104,5 @@ public sealed partial class ConfigSystem : ModSystem
 				}
 			}
 		}
-
-		DebugSystem.Logger.Debug("Received server configuration.");
 	}
 }

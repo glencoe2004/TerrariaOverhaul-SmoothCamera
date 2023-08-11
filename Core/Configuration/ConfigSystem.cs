@@ -6,8 +6,6 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Terraria.ModLoader;
-using TerrariaOverhaul.Core.Debugging;
-using TerrariaOverhaul.Utilities;
 
 namespace TerrariaOverhaul.Core.Configuration;
 
@@ -27,8 +25,6 @@ public sealed partial class ConfigSystem : ModSystem
 	{
 		ForceInitializeStaticConstructors();
 
-		DebugSystem.Log("Initializing configuration...");
-
 		foreach (var entry in entriesByName.Values) {
 			entry.Initialize(Mod);
 		}
@@ -41,7 +37,6 @@ public sealed partial class ConfigSystem : ModSystem
 
 	private void ForceInitializeStaticConstructors()
 	{
-		DebugSystem.Log($"Running static constructors of types that contain config entries...");
 
 		var assembly = Assembly.GetExecutingAssembly();
 		string assemblyName = assembly.GetName().Name ?? throw new InvalidOperationException("Executing assembly lacks a 'Name'.");
@@ -56,12 +51,6 @@ public sealed partial class ConfigSystem : ModSystem
 			foreach (var type in modAssembly.GetTypes()) {
 				if (type.IsEnum) {
 					continue;
-				}
-
-				var fields = type.GetFields(ReflectionUtils.AnyBindingFlags); // This will include backing fields of properties.
-
-				if (fields.Any(f => f.FieldType.GetInterfaces().Contains(typeof(IConfigEntry)))) {
-					RuntimeHelpers.RunClassConstructor(type.TypeHandle);
 				}
 			}
 		}
